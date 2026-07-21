@@ -9,17 +9,23 @@ function Contact() {
       email: form.email.value,
       message: form.message.value
     }
-    
+
     try {
       const response = await fetch(API_URL + '/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       })
-      
-      if (response.ok) {
+
+      const data = await response.json()
+
+      if (response.ok && data.emailSent) {
         alert('Message sent successfully!')
         form.reset()
+      } else if (response.ok && !data.emailSent) {
+        alert('Message saved to database, but email notification failed. Check console for details.')
+      } else {
+        alert(data.error || 'Failed to send message. Please try again.')
       }
     } catch (error) {
       alert('Failed to send message. Please try again.')
@@ -31,14 +37,14 @@ function Contact() {
       <div className="container">
         <h2>Get In Touch</h2>
         <p className="section-subtitle">Have a project in mind? Let's work together</p>
-        
+
         <div className="contact-content">
           <div className="contact-info">
             <h3>Contact Information</h3>
             <p className="contact-description">
               I'm currently open to new opportunities and collaborations. Feel free to reach out!
             </p>
-            
+
             <div className="contact-items">
               <div className="contact-item">
                 <div className="contact-icon">@</div>

@@ -27,7 +27,7 @@ function Hero({ about }) {
           min-height: 100vh;
           display: flex;
           align-items: flex-start;
-          padding: 80px 0 40px;
+          padding: 110px 0 40px;
           position: relative;
         }
         .hero::before {
