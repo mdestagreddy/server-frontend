@@ -1,24 +1,30 @@
+import { smoothScrollTo } from '../utils/smoothScroller'
+
 function Footer({ about }) {
+  const handleScroll = (id) => {
+    smoothScrollTo(id)
+  }
+
   return (
     <footer className="footer">
       <div className="container">
         <div className="footer-content">
           <div className="footer-brand">
-            <span className="logo-text">{about?.name || 'Desta'}</span>
+             <span className="logo-text">{about?.name || 'DestaDev'}</span>
             <p>Building digital experiences that make a difference.</p>
           </div>
           
           <div className="footer-links">
             <h4>Quick Links</h4>
-            <a href="#about">About</a>
-            <a href="#skills">Skills</a>
-            <a href="#projects">Projects</a>
-            <a href="#contact">Contact</a>
+            <button onClick={() => handleScroll('about')}>About</button>
+            <button onClick={() => handleScroll('skills')}>Skills</button>
+            <button onClick={() => handleScroll('projects')}>Projects</button>
+            <button onClick={() => handleScroll('contact')}>Contact</button>
           </div>
         </div>
         
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} {about?.name || 'Desta'}. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} {about?.name || 'DestaDev'}. All rights reserved.</p>
         </div>
       </div>
 
@@ -37,10 +43,7 @@ function Footer({ about }) {
         .footer-brand .logo-text {
           font-size: 1.5rem;
           font-weight: 800;
-          background: var(--gradient-1);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+          color: var(--logo-text);
           margin-bottom: 1rem;
           display: block;
         }
@@ -58,12 +61,17 @@ function Footer({ about }) {
           flex-direction: column;
           gap: 0.75rem;
         }
-        .footer-links a {
+        .footer-links button {
           color: var(--text-muted);
-          text-decoration: none;
+          background: none;
+          border: none;
+          font-size: 1rem;
+          cursor: pointer;
+          text-align: left;
+          padding: 0;
           transition: color 0.3s ease;
         }
-        .footer-links a:hover {
+        .footer-links button:hover {
           color: var(--primary);
         }
         .footer-bottom {

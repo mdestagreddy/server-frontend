@@ -12,7 +12,7 @@ function About({ about }) {
             <div className="about-info">
               <div className="info-item">
                 <span className="info-label">Name:</span>
-                <span className="info-value">{about?.name || 'Desta'}</span>
+                <span className="info-value">{about?.name || 'DestaDev'}</span>
               </div>
               <div className="info-item">
                 <span className="info-label">Email:</span>
@@ -43,11 +43,18 @@ function About({ about }) {
           grid-template-columns: 1fr;
           gap: 3rem;
         }
+        .about-text {
+          max-width: 100%;
+          overflow-wrap: break-word;
+          word-wrap: break-word;
+        }
         .about-text p {
           font-size: 1.1rem;
           color: var(--text-secondary);
           margin-bottom: 2rem;
           line-height: 1.8;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
         }
         .about-info {
           display: grid;
@@ -60,6 +67,7 @@ function About({ about }) {
           border: 1px solid var(--border);
           border-radius: 0.75rem;
           transition: all 0.3s ease;
+          overflow-wrap: break-word;
         }
         .info-item:hover {
           border-color: var(--primary);
@@ -72,11 +80,14 @@ function About({ about }) {
           margin-bottom: 0.5rem;
           text-transform: uppercase;
           letter-spacing: 0.05em;
+          word-wrap: break-word;
         }
         .info-value {
           font-size: 1.1rem;
           font-weight: 600;
           color: var(--text-primary);
+          word-wrap: break-word;
+          overflow-wrap: break-word;
         }
       `}</style>
     </section>

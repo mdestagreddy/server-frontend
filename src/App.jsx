@@ -11,6 +11,8 @@ import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
 
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
 function AppContent() {
   const [about, setAbout] = useState(null)
   const [skills, setSkills] = useState([])
@@ -22,11 +24,11 @@ function AppContent() {
     const fetchData = async () => {
       try {
         const [aboutRes, skillsRes, projectsRes, expRes, eduRes] = await Promise.all([
-          fetch('/api/about').then(res => res.json()),
-          fetch('/api/skills').then(res => res.json()),
-          fetch('/api/projects').then(res => res.json()),
-          fetch('/api/experience').then(res => res.json()),
-          fetch('/api/education').then(res => res.json())
+          fetch(API_URL + '/about').then(res => res.json()),
+          fetch(API_URL + '/skills').then(res => res.json()),
+          fetch(API_URL + '/projects').then(res => res.json()),
+          fetch(API_URL + '/experience').then(res => res.json()),
+          fetch(API_URL + '/education').then(res => res.json())
         ])
         setAbout(aboutRes)
         setSkills(skillsRes)

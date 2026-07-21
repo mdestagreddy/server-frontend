@@ -1,22 +1,20 @@
 import { useState } from 'react'
 import ThemeToggle from './ThemeToggle'
+import { smoothScrollTo } from '../utils/smoothScroller'
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
 
   const scrollTo = (id) => {
-    const element = document.getElementById(id)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-      setIsOpen(false)
-    }
+    smoothScrollTo(id)
+    setIsOpen(false)
   }
 
   return (
     <nav className="navbar">
       <div className="container navbar-container">
         <div className="logo" onClick={() => scrollTo('hero')}>
-          <span className="logo-text">Desta</span>
+          <img className="logo-img" src="/DestaDev.svg" alt="DestaDev" />
         </div>
         
         <ul className={`nav-links ${isOpen ? 'active' : ''}`}>
@@ -56,13 +54,12 @@ function Navbar() {
         .logo {
           cursor: pointer;
         }
-        .logo-text {
-          font-size: 1.5rem;
-          font-weight: 800;
-          background: var(--gradient-1);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+        .logo-img {
+          height: 56px;
+          width: 56px;
+          border-radius: 50%;
+          display: block;
+          object-fit: cover;
         }
         .nav-actions {
           display: flex;
