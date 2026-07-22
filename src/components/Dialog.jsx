@@ -20,9 +20,6 @@ function Dialog({ open, title, message, onClose }) {
           position: fixed;
           inset: 0;
           background: rgba(0, 0, 0, 0.5);
-          display: flex;
-          align-items: center;
-          justify-content: center;
           z-index: 9999;
         }
         .dialog {
@@ -33,6 +30,11 @@ function Dialog({ open, title, message, onClose }) {
           min-width: 320px;
           max-width: 400px;
           box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 10000;
         }
         .dialog-header h3 {
           font-size: 1.25rem;
