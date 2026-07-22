@@ -1,3 +1,5 @@
+import profileImg from '../assets/my-profile.jpg'
+
 function About({ about }) {
   return (
     <section id="about" className="about">
@@ -6,21 +8,24 @@ function About({ about }) {
         <p className="section-subtitle">Get to know more about me and my journey</p>
         
         <div className="about-content">
+          <div className="about-image">
+            <img src={profileImg} alt="Muhammad Desta Greddy Aulia Rahman" />
+          </div>
           <div className="about-text">
-            <p>{about?.bio || 'Passionate developer focused on creating exceptional digital experiences.'}</p>
+            <p>{about?.bio || "Muhammad Desta Greddy Aulia Rahman, based in Samarinda, Kalimantan Timur, Indonesia. Passionate developer focused on creating exceptional digital experiences."}</p>
             
             <div className="about-info">
               <div className="info-item">
                 <span className="info-label">Name:</span>
-                <span className="info-value">{about?.name || 'DestaDev'}</span>
+                <span className="info-value">{about?.name || 'Muhammad Desta Greddy Aulia Rahman'}</span>
               </div>
               <div className="info-item">
                 <span className="info-label">Email:</span>
-                <span className="info-value">{about?.email || 'desta@example.com'}</span>
+                <span className="info-value">{about?.email || 'destagreddy1206@gmail.com'}</span>
               </div>
               <div className="info-item">
                 <span className="info-label">Location:</span>
-                <span className="info-value">{about?.location || 'Indonesia'}</span>
+                <span className="info-value">{about?.location || 'Samarinda, Kalimantan Timur, Indonesia'}</span>
               </div>
               <div className="info-item">
                 <span className="info-label">Availability:</span>
@@ -40,8 +45,24 @@ function About({ about }) {
       <style>{`
         .about-content {
           display: grid;
-          grid-template-columns: 1fr;
-          gap: 3rem;
+          grid-template-columns: 1fr 1.5fr;
+          gap: 4rem;
+          align-items: start;
+        }
+        .about-image {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .about-image img {
+          width: 100%;
+          max-width: 420px;
+          height: auto;
+          border-radius: 1.5rem;
+          border: 2px solid var(--border);
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+          object-fit: cover;
+          display: block;
         }
         .about-text {
           max-width: 100%;
@@ -88,6 +109,15 @@ function About({ about }) {
           color: var(--text-primary);
           word-wrap: break-word;
           overflow-wrap: break-word;
+        }
+        @media (max-width: 768px) {
+          .about-content {
+            grid-template-columns: 1fr;
+            gap: 3rem;
+          }
+          .about-image img {
+            max-width: 280px;
+          }
         }
       `}</style>
     </section>

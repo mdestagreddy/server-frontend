@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
-function Contact() {
+function Contact({ showDialog }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
     const form = e.target
@@ -20,15 +20,15 @@ function Contact() {
       const data = await response.json()
 
       if (response.ok && data.emailSent) {
-        alert('Message sent successfully!')
+        showDialog({ title: 'Success', message: 'Message sent successfully!' })
         form.reset()
       } else if (response.ok && !data.emailSent) {
-        alert('Message saved to database, but email notification failed. Check console for details.')
+        showDialog({ title: 'Warning', message: 'Message saved to database, but email notification failed. Check console for details.' })
       } else {
-        alert(data.error || 'Failed to send message. Please try again.')
+        showDialog({ title: 'Error', message: data.error || 'Failed to send message. Please try again.' })
       }
     } catch (error) {
-      alert('Failed to send message. Please try again.')
+      showDialog({ title: 'Error', message: 'Failed to send message. Please try again.' })
     }
   }
 

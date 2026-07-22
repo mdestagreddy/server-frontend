@@ -10,6 +10,7 @@ import Projects from './components/Projects'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
+import Dialog from './components/Dialog'
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -19,6 +20,15 @@ function AppContent() {
   const [projects, setProjects] = useState([])
   const [experience, setExperience] = useState([])
   const [education, setEducation] = useState([])
+  const [dialog, setDialog] = useState({ open: false, title: '', message: '' })
+
+  const showDialog = ({ title, message }) => {
+    setDialog({ open: true, title, message })
+  }
+
+  const hideDialog = () => {
+    setDialog(prev => ({ ...prev, open: false }))
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,9 +61,10 @@ function AppContent() {
       <Experience experience={experience} />
       <Education education={education} />
       <Projects projects={projects} />
-      <Contact />
+      <Contact showDialog={showDialog} />
       <Footer about={about} />
       <ScrollToTop />
+      <Dialog open={dialog.open} title={dialog.title} message={dialog.message} onClose={hideDialog} />
     </div>
   )
 }
