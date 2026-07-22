@@ -10,7 +10,7 @@ function Footer({ about }) {
       <div className="container">
         <div className="footer-content">
           <div className="footer-brand">
-             <span className="logo-text">{about?.name || 'DestaDev'}</span>
+             <span className="logo-text">DestaDev</span>
             <p>Building digital experiences that make a difference.</p>
           </div>
           
@@ -24,7 +24,7 @@ function Footer({ about }) {
         </div>
         
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} {about?.name || 'DestaDev'}. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} DestaDev. All rights reserved.</p>
         </div>
       </div>
 
