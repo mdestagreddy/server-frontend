@@ -1,10 +1,8 @@
 function Dialog({ open, title, message, onClose }) {
-  if (!open) return null
-
   return (
-    <>
+    <div className={`dialog-wrapper ${open ? 'dialog-visible' : ''}`}>
       <div className="dialog-overlay" onClick={onClose}></div>
-      <div className="dialog">
+      <div className="dialog" onClick={(e) => e.stopPropagation()}>
         <div className="dialog-header">
           <h3>{title}</h3>
         </div>
@@ -16,11 +14,24 @@ function Dialog({ open, title, message, onClose }) {
         </div>
       </div>
       <style>{`
-        .dialog-overlay {
+        .dialog-wrapper {
           position: fixed;
           inset: 0;
+          z-index: 10000;
+          pointer-events: none;
+        }
+        .dialog-wrapper.dialog-visible {
+          pointer-events: auto;
+        }
+        .dialog-overlay {
+          position: absolute;
+          inset: 0;
           background: rgba(0, 0, 0, 0.5);
-          z-index: 9999;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+        .dialog-wrapper.dialog-visible .dialog-overlay {
+          opacity: 1;
         }
         .dialog {
           background: var(--bg-card);
@@ -30,11 +41,16 @@ function Dialog({ open, title, message, onClose }) {
           min-width: 320px;
           max-width: 400px;
           box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-          position: fixed;
+          position: absolute;
           top: 50%;
           left: 50%;
-          transform: translate(-50%, -50%);
-          z-index: 10000;
+          transform: translate(-50%, -50%) scale(0.92);
+          opacity: 0;
+          transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .dialog-wrapper.dialog-visible .dialog {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
         }
         .dialog-header h3 {
           font-size: 1.25rem;
@@ -51,7 +67,7 @@ function Dialog({ open, title, message, onClose }) {
           justify-content: flex-end;
         }
       `}</style>
-    </>
+    </div>
   )
 }
 
