@@ -1,26 +1,38 @@
 const API_URL = import.meta.env.VITE_API_URL || '/api';
-import { useState, useEffect, useCallback } from 'react'
+const TURNSTILE_SITE_KEY = '0x4AAAAAAD7CLO0BoMCaGQaR';
+import { useState, useEffect } from 'react'
 
 function Contact({ showDialog }) {
-  const [captchaInput, setCaptchaInput] = useState('')
-  const [captchaId, setCaptchaId] = useState('')
-  const [captchaImage, setCaptchaImage] = useState('')
+  const [captchaToken, setCaptchaToken] = useState('')
+  const [turnstileLoaded, setTurnstileLoaded] = useState(false)
 
-  const fetchCaptcha = useCallback(async () => {
-    try {
-      const res = await fetch(API_URL + '/captcha')
-      const data = await res.json()
-      setCaptchaId(data.id)
-      setCaptchaImage(data.svg)
-      setCaptchaInput('')
-    } catch (err) {
-      console.error('Failed to load captcha', err)
+  useEffect(() => {
+    if (document.querySelector('script[src*="turnstile"]')) {
+      setTurnstileLoaded(true)
+      return
+    }
+
+    const script = document.createElement('script')
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
+    script.async = true
+    script.defer = true
+    script.onload = () => setTurnstileLoaded(true)
+    document.head.appendChild(script)
+
+    return () => {
+      script.remove()
     }
   }, [])
 
   useEffect(() => {
-    fetchCaptcha()
-  }, [fetchCaptcha])
+    if (turnstileLoaded && window.turnstile) {
+      window.turnstile.render('#turnstile-widget', {
+        sitekey: TURNSTILE_SITE_KEY,
+        callback: (token) => setCaptchaToken(token),
+        'expired-callback': () => setCaptchaToken(''),
+      })
+    }
+  }, [turnstileLoaded])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -29,8 +41,12 @@ function Contact({ showDialog }) {
       name: form.name.value,
       email: form.email.value,
       message: form.message.value,
-      captchaId,
-      captchaValue: captchaInput,
+      captchaToken,
+    }
+
+    if (!captchaToken) {
+      showDialog({ title: 'Captcha Required', message: 'Please complete the captcha verification before sending.' })
+      return
     }
 
     try {
@@ -45,17 +61,17 @@ function Contact({ showDialog }) {
       if (response.ok && data.emailSent) {
         showDialog({ title: 'Success', message: 'Message sent successfully!' })
         form.reset()
-        fetchCaptcha()
+        setCaptchaToken('')
+        if (window.turnstile) {
+          window.turnstile.reset('#turnstile-widget')
+        }
       } else if (response.ok && !data.emailSent) {
         showDialog({ title: 'Warning', message: 'Message saved to database, but email notification failed. Check console for details.' })
-        fetchCaptcha()
       } else {
         showDialog({ title: 'Error', message: data.error || 'Failed to send message. Please try again.' })
-        fetchCaptcha()
       }
     } catch (error) {
       showDialog({ title: 'Error', message: 'Failed to send message. Please try again.' })
-      fetchCaptcha()
     }
   }
 
@@ -106,22 +122,8 @@ function Contact({ showDialog }) {
             <div className="form-group">
               <textarea name="message" rows="6" placeholder="Your Message" required></textarea>
             </div>
-            <div className="captcha-group">
-              <div className="captcha-display">
-                {captchaImage ? (
-                  <img src={captchaImage} alt="Captcha" />
-                ) : (
-                  <div className="captcha-loading">Loading captcha...</div>
-                )}
-                <button type="button" onClick={fetchCaptcha} className="captcha-refresh">Refresh</button>
-              </div>
-              <input
-                type="text"
-                value={captchaInput}
-                onChange={(e) => setCaptchaInput(e.target.value)}
-                placeholder="Type the captcha code"
-                required
-              />
+            <div className="form-group">
+              <div id="turnstile-widget"></div>
             </div>
             <button type="submit" className="btn btn-primary">Send Message</button>
           </form>
@@ -225,67 +227,9 @@ function Contact({ showDialog }) {
           resize: vertical;
           min-height: 120px;
         }
-        .captcha-group {
+        #turnstile-widget {
           display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
-        }
-        .captcha-display {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-        }
-        .captcha-display img {
-          display: block;
-          height: 56px;
-          border-radius: 0.5rem;
-          border: 1px solid var(--border);
-        }
-        .captcha-loading {
-          height: 56px;
-          display: flex;
-          align-items: center;
           justify-content: center;
-          color: var(--text-muted);
-          font-size: 0.9rem;
-          border: 1px solid var(--border);
-          border-radius: 0.5rem;
-          background: var(--bg-card);
-        }
-        .captcha-refresh {
-          padding: 0.5rem 1rem;
-          background: var(--bg-card);
-          border: 1px solid var(--border);
-          border-radius: 0.5rem;
-          color: var(--text-secondary);
-          font-size: 0.9rem;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          white-space: nowrap;
-        }
-        .captcha-refresh:hover {
-          border-color: var(--primary);
-          color: var(--primary);
-        }
-        .captcha-group input {
-          width: 100%;
-          padding: 1rem 1.25rem;
-          background: var(--bg-card);
-          border: 1px solid var(--border);
-          border-radius: 0.75rem;
-          color: var(--text-primary);
-          font-family: inherit;
-          font-size: 1rem;
-          transition: all 0.3s ease;
-        }
-        .captcha-group input:focus {
-          outline: none;
-          border-color: var(--primary);
-          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-        .captcha-group input::placeholder {
-          color: var(--text-muted);
         }
         @media (max-width: 768px) {
           .contact-content {
